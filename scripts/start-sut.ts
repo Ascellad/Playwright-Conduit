@@ -1,9 +1,4 @@
-import {
-  saveProcessIds,
-  startProcess,
-  stopAllProcesses,
-  waitForApplication,
-} from '../src/utils/sut-process.js';
+import { startProcess, stopAllProcesses, waitForApplication } from '../src/utils/sut-process.js';
 
 import { SUT } from '../src/utils/sut.js';
 
@@ -14,8 +9,6 @@ async function main(): Promise<void> {
     JWT_SECRET: 'local-development-secret',
   });
   startProcess('Frontend', 'bun', ['run', 'start'], SUT.frontend.directory);
-
-  await saveProcessIds();
 
   await waitForApplication('Backend', '127.0.0.1', SUT.backend.port);
   await waitForApplication('Frontend', '127.0.0.1', SUT.frontend.port);

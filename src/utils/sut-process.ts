@@ -1,7 +1,5 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { createConnection } from 'node:net';
-import { unlink, writeFile } from 'node:fs/promises';
-import { SUT_PROCESS_FILE } from './sut.js';
 
 export interface RunningProcess {
   name: string;
@@ -43,21 +41,6 @@ export function startProcess(
   });
 
   return child;
-}
-
-export async function saveProcessIds(): Promise<void> {
-  await writeFile(
-    SUT_PROCESS_FILE,
-    JSON.stringify(
-      runningProcesses.map(({ name, process }) => ({
-        name,
-        pid: process.pid,
-      })),
-      null,
-      2,
-    ),
-    'utf8',
-  );
 }
 
 export function waitForPort(host: string, port: number, timeoutMs = 120_000): Promise<void> {
@@ -131,14 +114,4 @@ export async function stopAllProcesses(): Promise<void> {
   }
 
   runningProcesses.length = 0;
-
-  await removeProcessFile();
-}
-
-async function removeProcessFile(): Promise<void> {
-  try {
-    await unlink(SUT_PROCESS_FILE);
-  } catch {
-    // File may not exist.
-  }
 }
