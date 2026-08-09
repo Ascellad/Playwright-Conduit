@@ -1,0 +1,35 @@
+{
+  "name": "playwright-conduit",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript automation framework for the RealWorld Conduit application",
+  "main": "index.js",
+  "scripts": {
+    "setup:sut": "tsx scripts/setup-sut.ts",
+    "start:sut": "tsx scripts/start-sut.ts",
+    "stop:sut": "tsx scripts/stop-sut.ts",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0",
+    "eslint": "^10.8.1",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.11",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.66.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
