@@ -2,6 +2,8 @@ import path from 'node:path';
 
 export const SUT_ROOT = path.resolve('.sut');
 
+export const SUT_PATCH = path.resolve('patches/conduit-local-api.patch');
+
 export const SUT_PROCESS_FILE = path.join(SUT_ROOT, 'processes.json');
 
 export const SUT = {

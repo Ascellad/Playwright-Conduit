@@ -35,7 +35,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run start:sut',
     url: 'http://localhost:4200',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

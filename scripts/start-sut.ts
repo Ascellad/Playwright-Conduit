@@ -8,10 +8,15 @@ async function main(): Promise<void> {
   startProcess('Backend', 'bun', ['run', 'dev'], SUT.backend.directory, {
     JWT_SECRET: 'local-development-secret',
   });
-  startProcess('Frontend', 'bun', ['run', 'start'], SUT.frontend.directory);
+  startProcess(
+    'Frontend',
+    'bun',
+    ['run', 'start', '--', '--proxy-config', 'src/proxy.conf.json'],
+    SUT.frontend.directory,
+  );
 
-  await waitForApplication('Backend', '127.0.0.1', SUT.backend.port);
-  await waitForApplication('Frontend', '127.0.0.1', SUT.frontend.port);
+  await waitForApplication('Backend', 'localhost', SUT.backend.port);
+  await waitForApplication('Frontend', 'localhost', SUT.frontend.port);
 
   console.log('\n✓ Conduit SUT is ready.');
   console.log(`  Backend:  http://localhost:${SUT.backend.port}`);
@@ -22,15 +27,15 @@ async function main(): Promise<void> {
   });
 }
 
-function shutdown(): void {
-  stopAllProcesses();
+async function shutdown(): Promise<void> {
+  await stopAllProcesses();
   process.exit(0);
 }
 
 process.once('SIGINT', shutdown);
 process.once('SIGTERM', shutdown);
 
-main().catch((error: unknown) => {
+main().catch(async (error: unknown) => {
   console.error('\n✗ Failed to start Conduit SUT.');
 
   if (error instanceof Error) {
@@ -39,6 +44,6 @@ main().catch((error: unknown) => {
     console.error(error);
   }
 
-  stopAllProcesses();
+  await stopAllProcesses();
   process.exit(1);
 });

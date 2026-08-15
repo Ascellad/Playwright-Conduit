@@ -1,0 +1,25 @@
+diff --git a/src/app/core/interceptors/api.interceptor.ts b/src/app/core/interceptors/api.interceptor.ts
+index 32160a1..52f8b66 100644
+--- a/src/app/core/interceptors/api.interceptor.ts
++++ b/src/app/core/interceptors/api.interceptor.ts
+@@ -1,6 +1,6 @@
+ import { HttpInterceptorFn } from '@angular/common/http';
+ 
+ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
+-  const apiReq = req.clone({ url: `https://api.realworld.show/api${req.url}` });
++  const apiReq = req.clone({ url: `/api${req.url}` });
+   return next(apiReq);
+ };
+diff --git a/src/proxy.conf.json b/src/proxy.conf.json
+new file mode 100644
+index 0000000..c0ce26b
+--- /dev/null
++++ b/src/proxy.conf.json
+@@ -0,0 +1,7 @@
++{
++  "/api/**": {
++    "target": "http://localhost:3000",
++    "secure": false,
++    "changeOrigin": true
++  }
++}

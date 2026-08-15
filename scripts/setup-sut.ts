@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { access, mkdir } from 'node:fs/promises';
 import { promisify } from 'node:util';
 
-import { SUT, SUT_ROOT } from '../src/utils/sut.js';
+import { SUT, SUT_ROOT, SUT_PATCH } from '../src/utils/sut.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -62,6 +62,20 @@ async function prepareRepository(
   await run('git', ['fetch', '--all', '--tags'], directory);
 
   await run('git', ['checkout', '--detach', commit], directory);
+
+  await run('git', ['reset', '--hard', commit], directory);
+
+  await run('git', ['clean', '-fd'], directory);
+}
+
+async function applyFrontendPatch(): Promise<void> {
+  console.log('\nApplying local Conduit API patch...');
+
+  await run('git', ['apply', '--check', SUT_PATCH], SUT.frontend.directory);
+
+  await run('git', ['apply', SUT_PATCH], SUT.frontend.directory);
+
+  console.log('✓ Local API patch applied.');
 }
 
 async function prepareBackend(): Promise<void> {
@@ -79,6 +93,8 @@ async function prepareFrontend(): Promise<void> {
   console.log('\n=== Frontend ===');
 
   await prepareRepository(SUT.frontend.repository, SUT.frontend.commit, SUT.frontend.directory);
+
+  await applyFrontendPatch();
 
   await run('bun', ['run', 'setup'], SUT.frontend.directory);
 }
