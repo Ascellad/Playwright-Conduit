@@ -10,4 +10,15 @@ export default defineConfig([
   js.configs.recommended,
 
   ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'error',
+    },
+  },
 ]);
