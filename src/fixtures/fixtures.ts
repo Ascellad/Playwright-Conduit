@@ -2,6 +2,7 @@ import { test as base } from '@playwright/test';
 import { ApiClient } from '../api/app';
 import { LoginPage } from '../pages/login.page';
 import { TestUser } from '../models/user';
+import { RegistrationPage } from '../pages/registration.page';
 import { UserFactory } from '../factories/user.factory';
 
 type ApiFixtures = {
@@ -11,12 +12,18 @@ type ApiFixtures = {
 
 type PagesFixtures = {
   loginPage: LoginPage;
+  registrationPage: RegistrationPage;
 };
 
 export const test = base.extend<PagesFixtures & ApiFixtures>({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
+  },
+
+  registrationPage: async ({ page }, use) => {
+    const registrationPage = new RegistrationPage(page);
+    await use(registrationPage);
   },
 
   apiClient: async ({ playwright }, use) => {
