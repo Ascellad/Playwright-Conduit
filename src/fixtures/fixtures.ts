@@ -1,8 +1,8 @@
 import { test as base } from '@playwright/test';
 import { ApiClient } from '../api/app';
-import { faker } from '@faker-js/faker';
 import { LoginPage } from '../pages/login.page';
-import { CreateUserRequest, TestUser } from '../models/user';
+import { TestUser } from '../models/user';
+import { UserFactory } from '../factories/user.factory';
 
 type ApiFixtures = {
   apiClient: ApiClient;
@@ -33,12 +33,7 @@ export const test = base.extend<PagesFixtures & ApiFixtures>({
   },
 
   newUser: async ({ apiClient }, use) => {
-    const uniqueId = crypto.randomUUID().replaceAll('-', '');
-    const credentials: CreateUserRequest = {
-      email: uniqueId + '_' + faker.internet.email(),
-      username: faker.internet.username() + '_' + uniqueId,
-      password: faker.internet.password(),
-    };
+    const credentials = UserFactory.create();
 
     const user = {
       password: credentials.password,
