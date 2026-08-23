@@ -1,5 +1,6 @@
 import test, { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './base.page';
+import { LoginRequest } from '../models/user';
 
 type LoginError = 'credentials invalid';
 
@@ -17,14 +18,15 @@ export class LoginPage extends BasePage {
     this.#errorsContainer = this.page.locator('ul.error-messages');
   }
 
-  async fillCredentials(email: string, password: string): Promise<void> {
-    await this.#emailField.fill(email);
-    await this.#passwordField.fill(password);
+  async fillCredentials(credentials: LoginRequest): Promise<void> {
+    await this.#emailField.fill(credentials.email);
+    await this.#passwordField.fill(credentials.password);
   }
 
-  async logInAsUser(email: string, password: string): Promise<void> {
-    return await test.step(`Performing login as "${email}" user.`, async () => {
-      await this.fillCredentials(email, password);
+  //TODO: should return HomePage class.
+  async logInAsUser(credentials: LoginRequest): Promise<void> {
+    return await test.step(`Performing login as "${credentials.email}" user.`, async () => {
+      await this.fillCredentials(credentials);
       await this.signInButton.click();
     });
   }
