@@ -34,7 +34,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
-      - name: Setup Setup
+      - name: Setup SUT
         run: npm run setup:sut
 
       - name: Run tests

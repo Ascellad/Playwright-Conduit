@@ -4,6 +4,7 @@ import { LoginPage } from '../pages/login.page';
 import { TestUser } from '../models/user';
 import { RegistrationPage } from '../pages/registration.page';
 import { UserFactory } from '../factories/user.factory';
+import { API_URL } from '../config/environment';
 
 type ApiFixtures = {
   apiClient: ApiClient;
@@ -27,7 +28,7 @@ export const test = base.extend<PagesFixtures & ApiFixtures>({
   },
 
   apiClient: async ({ playwright }, use) => {
-    const apiURL = process.env.API_URL;
+    const apiURL = API_URL;
     if (!apiURL) {
       throw new Error('API_URL environment variable is required.');
     }
