@@ -19,6 +19,12 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Verify Bun
+        run: |
+          which bun
+          bun --version
+          echo "$PATH"
+
       - name: Install dependencies
         run: npm ci
 
