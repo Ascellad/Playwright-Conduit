@@ -21,4 +21,9 @@ export default defineConfig([
       '@typescript-eslint/no-floating-promises': 'error',
     },
   },
+
+  {
+    files: ['**/*.mjs'],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
 ]);
