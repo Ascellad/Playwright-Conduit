@@ -17,13 +17,12 @@ jobs:
           cache: npm
 
       - name: Setup Bun
+        id: setup-bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Verify Bun
+      - name: Show Bun path
         run: |
-          which bun
-          bun --version
-          echo "$PATH"
+          echo "Bun path: ${{ steps.setup-bun.outputs.bun-path }}"
 
       - name: Install dependencies
         run: npm ci
@@ -45,6 +44,8 @@ jobs:
           node -e "console.log(process.env.PATH); console.log(require('child_process').execFileSync('bun', ['--version'], { encoding: 'utf8' }))"
 
       - name: Run tests
+        env:
+          BUN_PATH: ${{ steps.setup-bun.outputs.bun-path }}
         run: npm test
 
       - name: Upload artifacts

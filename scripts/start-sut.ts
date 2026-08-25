@@ -5,12 +5,14 @@ import { SUT } from '../src/utils/sut.js';
 async function main(): Promise<void> {
   console.log('Starting Conduit SUT...');
 
-  startProcess('Backend', 'bun', ['run', 'dev'], SUT.backend.directory, {
+  const bunPath = process.env.BUN_PATH ?? 'bun';
+
+  startProcess('Backend', bunPath, ['run', 'dev'], SUT.backend.directory, {
     JWT_SECRET: 'local-development-secret',
   });
   startProcess(
     'Frontend',
-    'bun',
+    bunPath,
     ['run', 'start', '--', '--proxy-config', 'src/proxy.conf.json'],
     SUT.frontend.directory,
   );
