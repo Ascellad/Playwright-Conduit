@@ -40,6 +40,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
+      - name: Verify Bun from Node
+        run: node -e "console.log(process.env.PATH); console.log(require('child_process').execFileSync('bun', ['--version'], { encoding: 'utf8' }))"
+
       - name: Run tests
         run: npm test
 
