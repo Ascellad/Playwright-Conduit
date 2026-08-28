@@ -1,6 +1,7 @@
-import { NavBar } from '../../src/components/navbar.component';
 import { test, expect } from '../../src/fixtures/fixtures';
 import { UserFactory } from '../../src/factories/user.factory';
+import { SettingsPage } from '../../src/pages/settings.page';
+
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test('Conduit application is available', async ({ page }) => {
@@ -12,11 +13,12 @@ test('Conduit application is available', async ({ page }) => {
 test.describe('Login', () => {
   test('User can log in with valid credentials', async ({ loginPage, newUser }) => {
     await loginPage.goto();
-    await loginPage.logInAsUser({ email: newUser.email, password: newUser.password });
-    await expect(loginPage.page).toHaveURL('/');
-    //TODO: Move this into components/main page object.
-    const navBar = new NavBar(loginPage.page, 'nav.navbar');
-    await expect(navBar.currentUserLink).toHaveText(newUser.username);
+    const homePage = await loginPage.logInAsUser({
+      email: newUser.email,
+      password: newUser.password,
+    });
+    await expect(homePage.page).toHaveURL('/');
+    await expect(homePage.navBar.loggedIn.currentUserLink).toHaveText(newUser.username);
   });
 
   test('User cannot log in with invalid credentials', async ({ loginPage }) => {
@@ -47,11 +49,10 @@ test.describe('Register', () => {
     await registrationPage.goto();
 
     const credentials = UserFactory.create();
-    await registrationPage.registerUser(credentials);
+    const homePage = await registrationPage.registerUser(credentials);
 
-    await expect(registrationPage.page).toHaveURL('/');
-    const navBar = new NavBar(registrationPage.page, 'nav.navbar');
-    await expect(navBar.currentUserLink).toHaveText(credentials.username);
+    await expect(homePage.page).toHaveURL('/');
+    await expect(homePage.navBar.loggedIn.currentUserLink).toHaveText(credentials.username);
   });
 
   test('Sign up button is disabled when any field is empty', async ({ registrationPage }) => {
@@ -157,5 +158,29 @@ test.describe('Register', () => {
         'username has already been taken',
       );
     });
+  });
+});
+
+test.describe('Logout', () => {
+  test.use({ storageState: '.auth/user.json' });
+  test('User can logout', async ({ homePage }) => {
+    await homePage.goto();
+    const settingsPage = (await homePage.navBar.openPage('Settings')) as SettingsPage;
+    homePage = await settingsPage.logout();
+
+    await expect(homePage.page).toHaveURL('/');
+    await expect(homePage.navBar.loggedOut.signInLink).toBeVisible();
+    await expect(homePage.navBar.loggedOut.signUpLink).toBeVisible();
+    await expect(homePage.navBar.loggedIn.currentUserLink).not.toBeVisible();
+  });
+  test("Unauthorized user can't access some pages", async ({ homePage }) => {
+    await homePage.goto();
+    const settingsPage = (await homePage.navBar.openPage('Settings')) as SettingsPage;
+    homePage = await settingsPage.logout();
+
+    await expect(homePage.page).toHaveURL('/');
+    await expect(homePage.navBar.loggedOut.signInLink).toBeVisible();
+    await expect(homePage.navBar.loggedOut.signUpLink).toBeVisible();
+    await expect(homePage.navBar.loggedIn.currentUserLink).not.toBeVisible();
   });
 });

@@ -5,6 +5,7 @@ import { TestUser } from '../models/user';
 import { RegistrationPage } from '../pages/registration.page';
 import { UserFactory } from '../factories/user.factory';
 import { API_URL } from '../config/environment';
+import { HomePage } from '../pages/home.page';
 
 type ApiFixtures = {
   apiClient: ApiClient;
@@ -14,6 +15,7 @@ type ApiFixtures = {
 type PagesFixtures = {
   loginPage: LoginPage;
   registrationPage: RegistrationPage;
+  homePage: HomePage;
 };
 
 export const test = base.extend<PagesFixtures & ApiFixtures>({
@@ -25,6 +27,11 @@ export const test = base.extend<PagesFixtures & ApiFixtures>({
   registrationPage: async ({ page }, use) => {
     const registrationPage = new RegistrationPage(page);
     await use(registrationPage);
+  },
+
+  homePage: async ({ page }, use) => {
+    const homePage = new HomePage(page);
+    await use(homePage);
   },
 
   apiClient: async ({ playwright }, use) => {
@@ -48,7 +55,7 @@ export const test = base.extend<PagesFixtures & ApiFixtures>({
       ...(await apiClient.createUser(credentials)).user,
     };
     await use(user);
-    // TODO: There is no user deletion in API i think
+    // User cleanup is not possible because the SUT API does not expose a delete-user endpoint.
   },
 });
 

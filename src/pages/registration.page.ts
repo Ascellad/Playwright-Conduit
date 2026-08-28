@@ -1,6 +1,7 @@
 import test, { expect, Locator, Page } from '@playwright/test';
 import { BasePage } from './base.page';
 import { CreateUserRequest } from '../models/user';
+import { HomePage } from './home.page';
 
 type RegistrationError =
   | 'email has already been taken'
@@ -32,11 +33,11 @@ export class RegistrationPage extends BasePage {
     await this.#passwordField.fill(credentials.password);
   }
 
-  //TODO: should return HomePage class.
-  async registerUser(credentials: CreateUserRequest): Promise<void> {
+  async registerUser(credentials: CreateUserRequest): Promise<HomePage> {
     return await test.step(`Registering "${credentials.username}" user.`, async () => {
       await this.fillFields(credentials);
       await this.signUpButton.click();
+      return new HomePage(this.page);
     });
   }
 
