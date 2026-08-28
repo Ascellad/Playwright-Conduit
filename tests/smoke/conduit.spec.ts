@@ -1,6 +1,7 @@
 import { NavBar } from '../../src/components/navbar.component';
 import { test, expect } from '../../src/fixtures/fixtures';
 import { UserFactory } from '../../src/factories/user.factory';
+test.use({ storageState: { cookies: [], origins: [] } });
 
 test('Conduit application is available', async ({ page }) => {
   await page.goto('/');

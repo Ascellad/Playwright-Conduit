@@ -4,6 +4,8 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+export const authFile = '.auth/user.json';
+
 export default defineConfig({
   testDir: './tests',
 
@@ -28,11 +30,14 @@ export default defineConfig({
   },
 
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        storageState: authFile,
       },
+      dependencies: ['setup'],
     },
   ],
 
