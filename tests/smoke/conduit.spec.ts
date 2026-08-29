@@ -1,6 +1,7 @@
 import { test, expect } from '../../src/fixtures/fixtures';
 import { UserFactory } from '../../src/factories/user.factory';
 import { SettingsPage } from '../../src/pages/settings.page';
+import { authFile } from '../../src/config/paths';
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -162,7 +163,7 @@ test.describe('Register', () => {
 });
 
 test.describe('Logout', () => {
-  test.use({ storageState: '.auth/user.json' });
+  test.use({ storageState: authFile });
   test('User can logout', async ({ homePage }) => {
     await homePage.goto();
     const settingsPage = (await homePage.navBar.openPage('Settings')) as SettingsPage;

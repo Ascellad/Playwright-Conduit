@@ -1,13 +1,11 @@
-import { authFile } from '../playwright.config';
+import { authFile } from '../src/config/paths';
+import { UserFactory } from '../src/factories/user.factory';
 import { test as setup } from '../src/fixtures/fixtures';
-import { LoginRequest } from '../src/models/user';
 
 setup('authenticate', async ({ page, apiClient }) => {
-  const credentials: LoginRequest = {
-    email: 'test@gmail.com',
-    password: '11111111',
-  };
-  const token = await apiClient.login(credentials);
+  const credentials = UserFactory.create();
+  const token = (await apiClient.createUser(credentials)).user.token;
+  console.log(`Test user created: email=${credentials.email}, username=(${credentials.username})`);
 
   await page.goto('/');
   await page.evaluate((token) => {

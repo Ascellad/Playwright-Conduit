@@ -1,10 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import path from 'path';
+import { authFile } from './src/config/paths';
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-export const authFile = '.auth/user.json';
 
 export default defineConfig({
   testDir: './tests',
