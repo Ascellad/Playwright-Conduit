@@ -1,9 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-import path from 'path';
 import { authFile } from './src/config/paths';
-
-dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 export default defineConfig({
   testDir: './tests',
@@ -14,7 +10,7 @@ export default defineConfig({
 
   retries: process.env.CI ? 2 : 0,
 
-  ...(process.env.CI ? { workers: 2 } : {}),
+  ...(process.env.CI ? { workers: 1 } : {}),
 
   reporter: [['list'], ['html', { open: 'never' }]],
 
@@ -31,7 +27,22 @@ export default defineConfig({
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
-      name: 'chromium',
+      name: 'chromium-smoke',
+      testDir: './tests/smoke',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+    {
+      name: 'chromium-guest',
+      testDir: './tests/guest',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+    {
+      name: 'chromium-authenticated',
+      testDir: './tests/authenticated',
       use: {
         ...devices['Desktop Chrome'],
         storageState: authFile,
