@@ -7,10 +7,12 @@ export class UserFactory {
   }
 
   static createWith(overrides?: Partial<CreateUserRequest>): CreateUserRequest {
-    const uniqueId = crypto.randomUUID().replaceAll('-', '');
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const id = faker.string.nanoid(8);
     const defaults: CreateUserRequest = {
-      email: uniqueId + '_' + faker.internet.email(),
-      username: faker.internet.username() + '_' + uniqueId,
+      email: `${id}_${faker.internet.email({ firstName, lastName })}`,
+      username: `${faker.internet.username({ firstName, lastName })}_${id}`,
       password: faker.internet.password(),
     };
     return { ...defaults, ...overrides };
