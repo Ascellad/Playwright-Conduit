@@ -49,6 +49,10 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    {
+      name: 'api',
+      testDir: './tests/api',
+    },
   ],
 
   webServer: {

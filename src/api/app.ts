@@ -1,4 +1,4 @@
-import { APIRequestContext } from '@playwright/test';
+import { APIRequestContext, APIResponse } from '@playwright/test';
 import { ResponseError } from '../utils/error';
 import { LoginResponse, LoginRequest, UserResponse, CreateUserRequest } from '../models/user';
 
@@ -42,12 +42,15 @@ export class ApiClient {
     return body.user.token;
   }
 
-  async createUser(userData: CreateUserRequest): Promise<UserResponse> {
-    const url = `${this.baseURL}${apiEndpoints.users.createUser}`;
-    const response = await this.requestContext.post(url, {
+  async createUserRaw(userData: CreateUserRequest): Promise<APIResponse> {
+    return this.requestContext.post(`${this.baseURL}${apiEndpoints.users.createUser}`, {
       data: { user: userData },
       headers: this.getHeaders(),
     });
+  }
+
+  async createUser(userData: CreateUserRequest): Promise<UserResponse> {
+    const response = await this.createUserRaw(userData);
     if (!response.ok()) {
       throw new ResponseError(response);
     }
