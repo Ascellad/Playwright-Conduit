@@ -29,20 +29,23 @@ export class ApiClient {
     return headers;
   }
 
-  async login(credentials: LoginRequest): Promise<string> {
-    const response = await this.requestContext.post(`${this.baseURL}${apiEndpoints.users.login}`, {
+  async loginRaw(credentials: Partial<LoginRequest>): Promise<APIResponse> {
+    return this.requestContext.post(`${this.baseURL}${apiEndpoints.users.login}`, {
       data: { user: credentials },
-      headers: { 'Content-Type': 'application/json' },
+      headers: this.getHeaders(),
     });
+  }
 
+  async login(credentials: LoginRequest): Promise<LoginResponse> {
+    const response = await this.loginRaw(credentials);
     if (!response.ok()) {
       throw new ResponseError(response);
     }
     const body = (await response.json()) as LoginResponse;
-    return body.user.token;
+    return body;
   }
 
-  async createUserRaw(userData: CreateUserRequest): Promise<APIResponse> {
+  async createUserRaw(userData: Partial<CreateUserRequest>): Promise<APIResponse> {
     return this.requestContext.post(`${this.baseURL}${apiEndpoints.users.createUser}`, {
       data: { user: userData },
       headers: this.getHeaders(),
