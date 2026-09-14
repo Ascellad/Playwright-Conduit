@@ -152,3 +152,23 @@ Failed tests retain screenshots, videos and traces for investigation.
 - TypeScript type safety
 - CI/CD integration with GitHub Actions
 - failure investigation with screenshots, videos and traces
+
+## SUT
+
+As SUT (System Under Test) I am using locally deployed implementation of https://realworld.app.is/ (Medium.com like social blogging site)
+
+### Backend
+
+https://github.com/realworld-apps/nitro-prisma-zod-realworld-example-app
+
+### Frontend
+
+https://github.com/realworld-apps/angular-realworld-example-app
+
+## Author
+
+Basarab Alexey - [GitHub profile](https://github.com/Ascellad/)
+
+## License
+
+Project code: [MIT](LICENSE)
